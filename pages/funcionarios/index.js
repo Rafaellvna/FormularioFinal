@@ -27,7 +27,7 @@ function index() {
   }
 
   return (
-    <Pagina titulo="Funcionarios">
+    <Pagina titulo="Funcionários">
 
       <div className='text-end'>
         <Link href={'/funcionarios/form'}><Button variant="primary" className='m-1'>Novo Funcionário</Button></Link>

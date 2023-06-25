@@ -1,0 +1,100 @@
+import Pagina from '@/components/Pagina'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import { AiOutlineCheck } from 'react-icons/ai'
+import { IoMdArrowRoundBack } from 'react-icons/io'
+import pedidosValidator from '@/validators/pedidosValidator'
+import { mask } from 'remask'
+
+function form() {
+
+    const { push, query } = useRouter()
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm()
+
+    function getAll() {
+        return JSON.parse(window.localStorage.getItem('pedidos')) || []
+    }
+
+    useEffect(() => {
+        if (query.id) {
+            const pedidos = getAll()
+            const pedido = pedidos[query.id]
+
+            for (let atributo in pedido) {
+                setValue(atributo, pedido[atributo])
+            }
+        }
+    }, [query.id])
+
+    function salvar(dados) {
+        const pedidos = getAll()
+        pedidos.splice(query.id, 1, dados)
+        window.localStorage.setItem('pedidos', JSON.stringify(pedidos))
+        push('/pedidos')
+    }
+
+    function handleChange(event) {
+        const name = event.target.name
+        const value = event.target.value
+        const mascara = event.target.getAttribute('mask')
+        setValue(name, mask(value, mascara))
+    }
+
+    return (
+        <Pagina titulo="Pedidos">
+
+            <Form>
+                <Form.Group className="mb-3" controlId="quantidade">
+                    <Form.Label><strong>Quantidade: </strong></Form.Label>
+                    <Form.Control isInvalid={errors.quantidade} type="number" {...register('quantidade', pedidosValidator.quantidade)} />
+                    {
+                        errors.quantidade &&
+                        <small>{errors.quantidade.message}</small>
+                    }
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="dtpedido">
+                    <Form.Label><strong>Data Pedido: </strong></Form.Label>
+                    <Form.Control isInvalid={errors.dtpedido} type="text" mask="99/99/9999" {...register('dtpedido', pedidosValidator.dtpedido)} onChange={handleChange} />
+                    {
+                        errors.dtpedido &&
+                        <small>{errors.dtpedido.message}</small>
+                    }
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="status">
+                    <Form.Label><strong>Status: </strong></Form.Label>
+                    <Form.Select isInvalid={errors.status} type="text" {...register('status', pedidosValidator.status)} >
+                        <option></option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Entregue">Entregue</option>
+                    </Form.Select>
+                    {
+                        errors.status &&
+                        <small>{errors.status.message}</small>
+                    }
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="total">
+                    <Form.Label><strong>Total: </strong></Form.Label>
+                    <Form.Control isInvalid={errors.total} type="text" {...register('total', pedidosValidator.total)} />
+                    {
+                        errors.total &&
+                        <small>{errors.total.message}</small>
+                    }
+                </Form.Group>
+
+                <div className='text-center'>
+                    <Button variant="primary" onClick={handleSubmit(salvar)}><AiOutlineCheck className="me-1" />Salvar</Button>
+                    <Link href={'/pedidos'} className="ms-2 btn btn-danger"><IoMdArrowRoundBack className="me-1" />Voltar</Link>
+                </div>
+            </Form>
+
+        </Pagina>
+    )
+}
+
+export default form

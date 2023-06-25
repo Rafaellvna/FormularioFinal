@@ -72,11 +72,11 @@ function form() {
                         errors.salario &&
                         <small>{errors.salario.message}</small>
                     }
-                </Form.Group>cargo
+                </Form.Group>
 
                 <Form.Group className="mb-3" controlId="dtcontratacao">
                     <Form.Label><strong>Data Contratação: </strong></Form.Label>
-                    <Form.Control isInvalid={errors.dtcontratacao} type="date" mask="99/99/9999" {...register('dtcontratacao', funcionariosValidator.dtcontratacao)} onChange={handleChange} />
+                    <Form.Control isInvalid={errors.dtcontratacao} type="text" mask="99/99/9999" {...register('dtcontratacao', funcionariosValidator.dtcontratacao)} onChange={handleChange} />
                     {
                         errors.dtcontratacao &&
                         <small>{errors.dtcontratacao.message}</small>
@@ -85,7 +85,11 @@ function form() {
 
                 <Form.Group className="mb-3" controlId="ativo">
                     <Form.Label><strong>Ativo: </strong></Form.Label>
-                    <Form.Control isInvalid={errors.ativo} type="text" {...register('ativo', funcionariosValidator.ativo)} />
+                    <Form.Select isInvalid={errors.ativo} type="text" {...register('ativo', funcionariosValidator.ativo)} >
+                        <option></option>
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </Form.Select>
                     {
                         errors.ativo &&
                         <small>{errors.ativo.message}</small>
