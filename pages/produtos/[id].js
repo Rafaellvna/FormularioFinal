@@ -13,6 +13,7 @@ function form() {
 
     const { push, query } = useRouter()
     const { register, handleSubmit, formState: { errors }, setValue } = useForm()
+    const fornecedores = JSON.parse(window.localStorage.getItem('fornecedores')) || []
 
     function getAll() {
         return JSON.parse(window.localStorage.getItem('produtos')) || []
@@ -80,6 +81,20 @@ function form() {
                     {
                         errors.estoque &&
                         <small>{errors.estoque.message}</small>
+                    }
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="fornecedor">
+                    <Form.Label><strong>Fornecedor: </strong></Form.Label>
+                    <Form.Select isInvalid={errors.fornecedor} type="text" {...register('fornecedor')} >
+                        <option></option>
+                        {fornecedores.map((fornecedor, i) => (
+                            <option key={i} value={fornecedor.nome}>{fornecedor.nome}</option>
+                        ))}
+                    </Form.Select>
+                    {
+                        errors.fornecedor &&
+                        <small>{errors.fornecedor.message}</small>
                     }
                 </Form.Group>
                 

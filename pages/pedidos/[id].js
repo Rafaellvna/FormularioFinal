@@ -13,6 +13,8 @@ function form() {
 
     const { push, query } = useRouter()
     const { register, handleSubmit, formState: { errors }, setValue } = useForm()
+    const clientes = JSON.parse(window.localStorage.getItem('clientes')) || []
+    const produtos = JSON.parse(window.localStorage.getItem('produtos')) || []
 
     function getAll() {
         return JSON.parse(window.localStorage.getItem('pedidos')) || []
@@ -47,6 +49,34 @@ function form() {
         <Pagina titulo="Pedidos">
 
             <Form>
+            <Form.Group className="mb-3" controlId="cliente">
+                    <Form.Label><strong>Cliente: </strong></Form.Label>
+                    <Form.Select isInvalid={errors.cliente} type="number" {...register('cliente')} >
+                        <option></option>
+                        {clientes.map((cliente, i) => (
+                            <option key={i} value={cliente.nome}>{cliente.nome}</option>
+                        ))}
+                    </Form.Select>
+                    {
+                        errors.cliente &&
+                        <small>{errors.cliente.message}</small>
+                    }
+                </Form.Group>
+                
+                <Form.Group className="mb-3" controlId="produto">
+                    <Form.Label><strong>Produto: </strong></Form.Label>
+                    <Form.Select isInvalid={errors.produto} type="number" {...register('produto')} >
+                        <option></option>
+                        {produtos.map((produto, i) => (
+                            <option key={i} value={produto.nome}>{produto.nome}</option>
+                        ))}
+                    </Form.Select>
+                    {
+                        errors.produto &&
+                        <small>{errors.produto.message}</small>
+                    }
+                </Form.Group>
+
                 <Form.Group className="mb-3" controlId="quantidade">
                     <Form.Label><strong>Quantidade: </strong></Form.Label>
                     <Form.Control isInvalid={errors.quantidade} type="number" {...register('quantidade', pedidosValidator.quantidade)} />
